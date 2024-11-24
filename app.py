@@ -31,8 +31,12 @@ def predict():
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
 
-    # Save the uploaded file temporarily
-    img_path = os.path.join('uploads', file.filename)
+    # Save the uploaded file temporarily to Render's persistent disk
+    uploads_dir = '/mnt/data/uploads'  # Persistent disk directory on Render
+    if not os.path.exists(uploads_dir):
+        os.makedirs(uploads_dir)  # Ensure the uploads directory exists
+
+    img_path = os.path.join(uploads_dir, file.filename)
     file.save(img_path)
 
     # Preprocess the image and make predictions
